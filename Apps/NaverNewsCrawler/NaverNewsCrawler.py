@@ -49,17 +49,8 @@ def crawl_naver_news_all(keyword):
     return corpus
 
 def save_corpus(corpus, filename):
-    print(1)
-    print(corpus)
     news_list = []
     for item in corpus:
-        print(2)
-        print(item['title'])
-        print(item['link'])
-        print(item['description'])
-        print(item['bloggername'])
-        print(item['bloggerlink'])
-        print(item['postdate'])
         # HTML 태그 제거 (<b> 등 제거)
         title = item['title'].replace("<b>", "").replace("</b>", "").replace("&quot;", "")
         description = item['description'].replace("<b>", "").replace("</b>", "").replace("&quot;", "")
@@ -72,10 +63,7 @@ def save_corpus(corpus, filename):
             'bloggerlink': item['bloggerlink'],
             'postdate': item['postdate']
         })
-    print(3)
-    print(news_list)
     # 4. CSV 파일로 저장
     df = pd.DataFrame(news_list)
-    print(df)
     df.to_csv(f"./result/{filename}.csv", index=False, encoding="utf-8-sig")
     print("CSV 파일 저장 완료!")
