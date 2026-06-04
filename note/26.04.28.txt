@@ -1,0 +1,139 @@
+df.rename(columns={'이름':'name'})  컬럼 이름을 바꿀 때 사용
+df.astype({'국어':float}) 컬럼 데이터의 자료형을 수정할때 사용
+
+행에는 index로 이름이 붙어있고 열에는 column으로 이름이 붙어있다
+new_df = org_df.drop(인덱스이름, axis=0, inplace=) 
+new_df = org_df.drop(컬럼이름, axis=1, inplace=)
+
+
+
+reset_index 함수를 사용하여 정수 인덱스로 초기화
+new_df = org_df.reset_index(drop=False, inplace=False)
+
+직접 접근 방식
+열 접근 :
+df['이름'] : 하나의 열을 시리즈로 추출.
+df[['이름', '총점']] : 여러 열을 데이터프레임으로 추출 (대괄호 두 개 주의).
+df.이름 : 속성(Attribute) 방식 (열 이름에 공백이 없어야 가능).
+
+행 슬라이싱:
+df[0:2] : 0번부터 1번행까지 추출 (열 선택 불가)
+
+
+csv 파일을 DataFrame으로 로딩
+
+데이터 읽기 : pd.read_csv
+기능 : CSV 형식의 텍스트 파일을 읽어 Pandas DataFrame 객체로 변환함
+주요 매개변수:
+filepath_or_buffer : 파일 경로, URL, 또는 파일 객체를 입력받음.
+sep : 데이터 구분자를 지정하며, 기본값은 쉼표(,)임.
+header : 열 이름으로 사용할 행 번호를 지정함 (기본값은 첫 행을 사용하는 infer).
+index_col : 특정 열을 행의 인덱스로 설정
+encoding : 파일의 인코딩 방식을 지정, 한글 깨짐 방지를 위해 cp949를 주로 사용
+usecols : 필요한 특정 열만 선택해서 불러옴.
+
+데이터 저장 : df.to_csv
+기능 : DataFrame의 데이터를 CSV 파일이나 문자열로 저장하는 메서드임.
+주요 매개변수 :
+path_or_buf : 저장할 파일 경로를 지정함.
+index : 행 인덱스 포함 여부를 결정, 보통 False로 설정해 데이터만 저장
+encoding : 저장 시 인코딩 설정, 엑셀 호환성을 위해 utf-8-sig 권장
+na_rep : 결측치(NaN)를 어떤 문자로 표시할지 지정
+
+
+index_col, usecols, index를 많이 사용할것 같다. - 교수님피셜
+
+1. usecols 사용 방법 (4가지 타입)
+① 리스트(List)로 열 이름 지정 (가장 많이 사용)
+가장 직관적인 방법입니다. 원하는 컬럼명을 리스트에 담아 전달합니다.
+import pandas as pd
+# 'Name'과 'Age' 컬럼만 쏙 골라오기
+df = pd.read_csv('data.csv', usecols=['Name', 'Age'])
+
+② 인덱스 번호(Integer)로 지정
+컬럼 이름을 모르거나 이름이 너무 길 때 유용합니다. (0부터 시작)
+# 첫 번째(0)와 세 번째(2) 컬럼만 읽기
+df = pd.read_csv('data.csv', usecols=[0, 2])
+
+③ 호출 가능 함수(Callable) 사용
+특정 규칙이 있는 컬럼들을 필터링할 때 매우 강력합니다.
+# 'Date'라는 글자가 포함된 모든 컬럼만 읽기
+df = pd.read_csv('data.csv', usecols=lambda x: 'Date' in x)
+
+④ 엑셀 범위(Excel Range) 스타일
+엑셀 파일(read_excel)을 읽을 때는 엑셀 특유의 알파벳 표기법도 지원합니다.
+# A부터 C열까지만 읽기
+df = pd.read_excel('data.xlsx', usecols="A:C")
+
+
+데이터프레임을 시각화 하기
+Pandas의 DataFrame은 Matplotlib 라이브러리를 내장하고 있다.
+pd.plot()을 사용하기
+
+
+결측치 처리
+info()로 무식하게 데이터 다 불러서 찾기
+isnull()로 골라서 찾기
+
+
+1.inplace=False (기본값)
+inplace를 설정하지 않으면 기본적으로 False로 작동합니다.
+동작 방식: 원본 데이터프레임은 그대로 두고, 결측치(NaN)가 제거된 새로운 데이터프레임 객체를 생성해서 반환합니다.
+사용법: 원본을 보존하고 싶을 때, 혹은 바뀐 결과를 새 변수에 할당할 때 사용합니다.
+new_df = df.dropna()  # 원본 df는 변하지 않음
+
+2.inplace=True
+동작 방식: 새로운 객체를 만들지 않고, 원본 데이터프레임 자체를 수정합니다.
+반환값: 아무것도 반환하지 않습니다 (None).
+사용법: 메모리를 아끼고 싶거나, 원본을 즉시 업데이트하고 싶을 때 사용합니다.
+df.dropna(inplace=True)  # 이제 df에서 결측치가 사라짐
+
+많은 분이 실수하는 패턴 중 하나가 바로 이겁니다.
+# ❌ 잘못된 사용법
+df = df.dropna(inplace=True)
+이렇게 코드를 짜면 df.dropna(inplace=True)가 None을 반환하기 때문에, 멀쩡하던 df 변수가 None이 되어 사라져 버립니다. 
+inplace=True를 쓸 때는 절대 변수에 다시 할당하지 마세요!
+
+
+최신 판다스 개발 트렌드와 공식 문서에서는 inplace=True 사용을 가급적 피하는 추세입니다.
+메서드 체이닝(Method Chaining): df.dropna().sum().reset_index() 처럼 여러 함수를 연결해서 쓸 때 inplace=True는 연결을 끊어버립니다.
+명확성: df = df.dropna() 방식이 데이터가 어떻게 변하는지 코드 흐름상 더 명확하게 보입니다.
+성능: 내부적으로 inplace=True가 항상 복사본 생성보다 빠르지는 않다는 분석도 많습니다.
+
+
+
+자연어 처리 관련 주요 개념
+어절 > 단어 > 형태소 > 음절
+
+영어는 단어가 띄어쓰기 단위로 되어있다.
+한글은 띄어쓰기의 단위가 어절이지만
+자연어 처리에서 중요한건 형태소, 단어이다.
+
+공부는 몰아쳐서 해라
+
+stem이 중요  flied -> fly 단어의 원형태를 찾기
+
+1. jdk-17 -> path. JAVA_HOME
+2. jpype -> os.파이썬버전
+3. pip install -> konlpy
+4. python에서 정상적으로 설치됐는지 확인
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

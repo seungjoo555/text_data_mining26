@@ -1,0 +1,18 @@
+pandas에서 데이터구조를 따르는게 numpy
+
+
+MEGA_CTY_NO : 이용 지역_시도_코드
+MEGA_CYT_NM : 이용 지역_시도명
+CTY_RGN_NO : 이용 시군구_코드
+CTY_RGN_NM : 이용 시군구명
+
+TP_BUZ_NM : 이용한 내역 (ex. 편 의 점)
+CSTMR_MEGA_CTY_NM : 이용자 거주지역 시도명
+CSTMR_CTY_RGN_NM : 이용자 거주지역 시군구명
+AMT : 카드 이용금액
+CNT : 카드 이용 건수
+
+
+
+
+

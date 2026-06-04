@@ -1,0 +1,27 @@
+랜덤포레스트
+인공신경망
+SVM
+PCA
+
+
+Deep Learning
+알파고
+GAN(딥페이크 만들었던 기술)
+[
+generator -> descriptor
+descriptor -> generator
+]-> Diffusion Model
+
+stable diffusion
+
+
+SR-GAN
+
+
+
+
+
+
+
+
+
